@@ -15,8 +15,17 @@
 // ============================================================================
 
 // Inclusão das bibliotecas padrão necessárias para entrada/saída, alocação de memória, manipulação de strings e tempo.
+#include <stdio.h>
+#include <string.h>
 
 // --- Constantes Globais ---
+int MaxTerritorio = 5;
+
+    typedef struct {
+        char nome[50];
+        char CordoExercito[50];
+        int NumerodeTropas; /* data */
+    }territorio;
 // Definem valores fixos para o número de territórios, missões e tamanho máximo de strings, facilitando a manutenção.
 
 // --- Estrutura de Dados ---
@@ -32,6 +41,7 @@
 // --- Função Principal (main) ---
 // Função principal que orquestra o fluxo do jogo, chamando as outras funções em ordem.
 int main() {
+    inicializarTerritorios();
     // 1. Configuração Inicial (Setup):
     // - Define o locale para português.
     // - Inicializa a semente para geração de números aleatórios com base no tempo atual.
@@ -60,7 +70,28 @@ int main() {
 // Aloca dinamicamente a memória para o vetor de territórios usando calloc.
 // Retorna um ponteiro para a memória alocada ou NULL em caso de falha.
 
-// inicializarTerritorios():
+inicializarTerritorios(){
+    territorio territorios[MaxTerritorio];
+    for(int i=0; i<MaxTerritorio; i++){
+        printf("--------------------------\n");
+        printf("Preencha os dados iniciais do Territorio %d.\n", i + 1);
+        printf("Nome:");
+        fgets(territorios[i].nome, sizeof territorios[i].nome , stdin);
+        printf("Cor do Exercito:");
+        fgets(territorios[i].CordoExercito, sizeof territorios[i].CordoExercito , stdin);
+        printf("Numero de Tropas:");
+        scanf("%d", &territorios[i].NumerodeTropas);
+        getchar();     
+    }
+    printf("-----------Mapa atual----------\n");
+    for (int i=0;i<MaxTerritorio;i++) {
+        printf("Territorio %d\n", i + 1);
+        printf("Nome: %s",territorios[i].nome);
+        printf("Cor do territorio:%s",territorios[i].CordoExercito);
+        printf("Numero de tropas:%d\n",territorios[i].NumerodeTropas);
+        printf("---------------------------\n");
+    }
+};
 // Preenche os dados iniciais de cada território no mapa (nome, cor do exército, número de tropas).
 // Esta função modifica o mapa passado por referência (ponteiro).
 
