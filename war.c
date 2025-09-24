@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 
 // --- Estruturas ---
 typedef struct {
@@ -32,12 +33,12 @@ typedef struct {
 } Jogador;
 
 // --- Missões ---
-char missoes[1][100] = {
+char missoes[5][100] = {
     "Destruir o exercito Azul",
-    //"Destruir o exercito Vermelho",
-    //"Conquistar 1 territorios",
-    //"Conquistar 3 territorios",
-    //"Conquistar 4 territorios"
+    "Destruir o exercito Vermelho",
+    "Conquistar 1 territorios",
+    "Conquistar 3 territorios",
+    "Conquistar 4 territorios"
 };
 
 // --- Protótipos ---
@@ -49,6 +50,15 @@ int sortearMissao();
 int verificarMissao(char* missao, territorio* mapa, int tamanho, const char* corJogador);
 
 // --- Funções ---
+void capitalize(char *str) {
+    if (str && str[0]) {
+        str[0] = toupper(str[0]);
+        for (int i = 1; str[i]; i++) {
+            str[i] = tolower(str[i]);
+        }
+    }
+}
+
 territorio* inicializarTerritorios(int *numTerritorios) {
     printf("Digite o numero de Territorios: ");
     scanf("%d", numTerritorios);
@@ -67,6 +77,7 @@ territorio* inicializarTerritorios(int *numTerritorios) {
         printf("Cor do Exercito: ");
         fgets(territorios[i].CordoExercito, sizeof(territorios[i].CordoExercito), stdin);
         territorios[i].CordoExercito[strcspn(territorios[i].CordoExercito, "\n")] = 0;
+        capitalize(territorios[i].CordoExercito);
 
         printf("Numero de Tropas: ");
         scanf("%d", &territorios[i].NumerodeTropas);
@@ -91,13 +102,12 @@ void exibirMapa(const territorio *territorios, int numTerritorios) {
 }
 
 int sortearMissao(const char* corJogador) {
-    if (strcmp(corJogador, "Azul") == 0) {
-        printf("caiu azul\n");
-        return rand() % 1; // Missão de destruir o exército Azul
-    } else if (strcmp(corJogador, "Vermelho") == 0) {
-        return rand() % 1; // Missão de destruir o exército Vermelho
-    }
-    return rand() % 1;
+    int indice;
+
+    do {
+        indice = rand() % 5;
+    } while ((strcmp(corJogador, "Azul") == 0 && strcmp(missoes[indice], "Destruir o exercito Azul") == 0) ||(strcmp(corJogador, "Vermelho") == 0 && strcmp(missoes[indice], "Destruir o exercito Vermelho") == 0));
+    return indice;
 }
 
 void atacar(territorio* atacante, territorio* defensor) {
@@ -196,7 +206,8 @@ int main() {
     printf("\nDigite a cor do seu exercito: ");
     fgets(jogador.cor, sizeof(jogador.cor), stdin);
     jogador.cor[strcspn(jogador.cor, "\n")] = 0;
-
+    capitalize(jogador.cor);
+    printf("Cor escolhida: %s\n", jogador.cor);
     int idMissao = sortearMissao(jogador.cor);
     jogador.missao = malloc(strlen(missoes[idMissao]) + 1);
     strcpy(jogador.missao, missoes[idMissao]);
