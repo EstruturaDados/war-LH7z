@@ -32,11 +32,12 @@ typedef struct {
 } Jogador;
 
 // --- Missões ---
-char missoes[4][100] = {
-    "Destruir o exercito Vermelho",
-    "Conquistar 1 territorios",
-    "Conquistar 3 territorios",
-    "Conquistar 4 territorios"
+char missoes[1][100] = {
+    "Destruir o exercito Azul",
+    //"Destruir o exercito Vermelho",
+    //"Conquistar 1 territorios",
+    //"Conquistar 3 territorios",
+    //"Conquistar 4 territorios"
 };
 
 // --- Protótipos ---
@@ -49,7 +50,7 @@ int verificarMissao(char* missao, territorio* mapa, int tamanho, const char* cor
 
 // --- Funções ---
 territorio* inicializarTerritorios(int *numTerritorios) {
-    printf("Digite o numero de Territorios(O territorio do jogador deve ser o Azul): ");
+    printf("Digite o numero de Territorios: ");
     scanf("%d", numTerritorios);
     getchar();
 
@@ -89,8 +90,14 @@ void exibirMapa(const territorio *territorios, int numTerritorios) {
     }
 }
 
-int sortearMissao() {
-    return rand() % 4;
+int sortearMissao(const char* corJogador) {
+    if (strcmp(corJogador, "Azul") == 0) {
+        printf("caiu azul\n");
+        return rand() % 1; // Missão de destruir o exército Azul
+    } else if (strcmp(corJogador, "Vermelho") == 0) {
+        return rand() % 1; // Missão de destruir o exército Vermelho
+    }
+    return rand() % 1;
 }
 
 void atacar(territorio* atacante, territorio* defensor) {
@@ -186,11 +193,11 @@ int main() {
 
     // CRIAR JOGADOR
     Jogador jogador;
-    printf("\nDigite a cor do seu exercito como Azul: ");
+    printf("\nDigite a cor do seu exercito: ");
     fgets(jogador.cor, sizeof(jogador.cor), stdin);
     jogador.cor[strcspn(jogador.cor, "\n")] = 0;
 
-    int idMissao = sortearMissao();
+    int idMissao = sortearMissao(jogador.cor);
     jogador.missao = malloc(strlen(missoes[idMissao]) + 1);
     strcpy(jogador.missao, missoes[idMissao]);
 
